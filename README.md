@@ -33,7 +33,9 @@ There are two tests
 + Call api to access redis server directly
 + Send http request to the server
 ##### 1. Run
-+ go test -v test/common_test.go -args port=10034
++ go test -v test/common_test.go -port=10034 -redisip=127.0.0.1 -redisport=6379
 <br /><br />
 ##### 2. Arguments
 + port : The port server listened
++ redisip : The ip of redis server
++ redisport : The port of server listened
