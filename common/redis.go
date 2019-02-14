@@ -23,7 +23,6 @@ func InitRedis(addr string) {
 		MaxActive: 5,
 
 		TestOnBorrow: func(c redis.Conn, t time.Time) error {
-			log.Println("TestOnBorrow called ")
 			if time.Since(t) < time.Minute {
 				return nil
 			}
@@ -42,11 +41,11 @@ func DeleteIP(addr string) error {
 
 	c := mPool.Get()
 	if c == nil {
-		return err
+		return errors.New("connect server failed")
 	}
 	defer c.Close()
 
-	_, err = c.Do("DEL", addr)
+	_, err := c.Do("DEL", addr)
 
 	return err
 }
