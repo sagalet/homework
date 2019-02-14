@@ -24,7 +24,7 @@ Send the request to the server and get the response
 + out/client -delay=2000 -conf=client/server.conf -count=120
 <br /><br />
 ##### 2. Arguments
-+ delay : The latency between each request . The default is 2000.
++ delay : The latency between each request in ms. The default is 2000.
 + conf : The information of server. The default is "server.conf".
 + count : The number of reuqests sent. The default is 120
 
