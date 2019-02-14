@@ -13,7 +13,7 @@ var (
 func InitRedis(addr string) {
 	mPool = &redis.Pool{
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", addr)
+			c, err := redis.Dial("tcp", addr, redis.DialConnectTimeout(time.Second*3))
 			if err != nil {
 				return nil, err
 			}
@@ -23,6 +23,7 @@ func InitRedis(addr string) {
 		MaxActive: 5,
 
 		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+			log.Println("TestOnBorrow called ")
 			if time.Since(t) < time.Minute {
 				return nil
 			}
@@ -40,9 +41,12 @@ func DeleteIP(addr string) error {
 	}
 
 	c := mPool.Get()
+	if c == nil {
+		return err
+	}
 	defer c.Close()
 
-	_, err := c.Do("DEL", addr)
+	_, err = c.Do("DEL", addr)
 
 	return err
 }
@@ -53,6 +57,9 @@ func InsertRequest(addr string) (int, error) {
 	}
 
 	c := mPool.Get()
+	if c == nil {
+		return -1, errors.New("Server connect failed")
+	}
 	defer c.Close()
 	num, err := redis.Int64(c.Do("LLEN", addr))
 
